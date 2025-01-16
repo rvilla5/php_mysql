@@ -1,0 +1,29 @@
+services:
+    backend:
+        build: 
+            context: ./dockerfiles
+            dockerfile: Dockerfile.web
+        ports: 
+            - "8001:80"
+        volumes:
+            - ./web:/var/www/html/
+        links:
+            - db
+        networks:
+            - default
+    db:
+        image: mysql
+        ports: 
+            - "3306:3306"
+        environment:
+            MYSQL_DATABASE: ${MYSQL_DB}
+            MYSQL_USER: ${USUARIO_MYSQL}
+            MYSQL_PASSWORD: ${PASSWORD_USUARIO_MYSQL}
+            MYSQL_ROOT_PASSWORD: ${PASSWORD_ROOT_MYSQL}
+        volumes:
+            - ./DB:/docker-entrypoint-initdb.d
+            - persistente:/var/lib/mysql
+        networks:
+            - default
+volumes:
+    persistente:
